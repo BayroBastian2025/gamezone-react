@@ -1,0 +1,25 @@
+body {
+  background-color: #f4f5f9;
+}
+
+/* Efecto sutil al pasar el mouse por una tarjeta */
+.product-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.75rem 1.25rem rgba(0, 0, 0, 0.15) !important;
+}
+.product-card .card-img-top {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.cart-img {
+  width: 72px;
+  height: 54px;
+  object-fit: cover;
+}
+.cart-subtotal {
+  min-width: 90px;
+}

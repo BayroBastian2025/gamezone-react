@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "nombre": "Cosmic Raiders",
+    "genero": "Acción",
+    "precio": 24990,
+    "descripcion": "Shooter espacial cooperativo con campañas de 4 jugadores.",
+    "imagen": "img/cosmic-raiders.svg"
+  },
+  {
+    "id": 2,
+    "nombre": "Dragon's Hollow",
+    "genero": "RPG",
+    "precio": 39990,
+    "descripcion": "Explora cuevas, forja armas y derrota al dragón ancestral.",
+    "imagen": "img/dragon-s-hollow.svg"
+  },
+  {
+    "id": 3,
+    "nombre": "Turbo Drift GP",
+    "genero": "Carreras",
+    "precio": 29990,
+    "descripcion": "Carreras arcade con más de 40 circuitos y autos personalizables.",
+    "imagen": "img/turbo-drift-gp.svg"
+  },
+  {
+    "id": 4,
+    "nombre": "Pixel Farm Valley",
+    "genero": "Simulación",
+    "precio": 17990,
+    "descripcion": "Cultiva, cría animales y construye la granja de tus sueños.",
+    "imagen": "img/pixel-farm-valley.svg"
+  },
+  {
+    "id": 5,
+    "nombre": "Shadow Ninja Legacy",
+    "genero": "Aventura",
+    "precio": 32990,
+    "descripcion": "Sigilo y combate cuerpo a cuerpo en el Japón feudal.",
+    "imagen": "img/shadow-ninja-legacy.svg"
+  },
+  {
+    "id": 6,
+    "nombre": "Goal Masters 26",
+    "genero": "Deportes",
+    "precio": 44990,
+    "descripcion": "El simulador de fútbol con ligas, copas y modo carrera.",
+    "imagen": "img/goal-masters-26.svg"
+  },
+  {
+    "id": 7,
+    "nombre": "Mind Maze",
+    "genero": "Puzzle",
+    "precio": 9990,
+    "descripcion": "Más de 200 acertijos que desafiarán tu lógica.",
+    "imagen": "img/mind-maze.svg"
+  },
+  {
+    "id": 8,
+    "nombre": "Neon Samurai 2077",
+    "genero": "Acción",
+    "precio": 36990,
+    "descripcion": "Hack and slash cyberpunk con banda sonora synthwave.",
+    "imagen": "img/neon-samurai-2077.svg"
+  },
+  {
+    "id": 9,
+    "nombre": "Kingdom Architects",
+    "genero": "Estrategia",
+    "precio": 27990,
+    "descripcion": "Administra recursos y levanta un reino medieval.",
+    "imagen": "img/kingdom-architects.svg"
+  },
+  {
+    "id": 10,
+    "nombre": "Deep Blue Odyssey",
+    "genero": "Aventura",
+    "precio": 22990,
+    "descripcion": "Bucea en océanos misteriosos y descubre civilizaciones perdidas.",
+    "imagen": "img/deep-blue-odyssey.svg"
+  },
+  {
+    "id": 11,
+    "nombre": "Zombie Outpost",
+    "genero": "Estrategia",
+    "precio": 19990,
+    "descripcion": "Defiende tu base de oleadas de zombis durante 30 noches.",
+    "imagen": "img/zombie-outpost.svg"
+  },
+  {
+    "id": 12,
+    "nombre": "Star Quest Heroes",
+    "genero": "RPG",
+    "precio": 41990,
+    "descripcion": "Un RPG por turnos con 20 héroes y combates tácticos.",
+    "imagen": "img/star-quest-heroes.svg"
+  }
+]
