@@ -23,3 +23,45 @@ body {
 .cart-subtotal {
   min-width: 90px;
 }
+
+/* ===== Navegación por secciones ===== */
+html {
+  scroll-behavior: smooth;
+}
+section[id] {
+  scroll-margin-top: 80px; /* evita que la barra fija tape el título al navegar */
+}
+
+/* ===== Portada (hero) ===== */
+.hero {
+  background: linear-gradient(135deg, #1b1f3b 0%, #3a2d7d 55%, #6c3fc5 100%);
+  box-shadow: 0 0.5rem 1.5rem rgba(58, 45, 125, 0.35);
+}
+
+/* CSS Grid: las ventajas se reparten en columnas que se adaptan al ancho */
+.ventajas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.ventaja {
+  display: flex; /* Flexbox dentro de cada celda: icono + texto */
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ===== Filtros: Grid de dos columnas en escritorio, una en móvil ===== */
+.filtros {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 992px) {
+  .filtros {
+    grid-template-columns: minmax(240px, 1fr) 2fr;
+    align-items: center;
+  }
+}

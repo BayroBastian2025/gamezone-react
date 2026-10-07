@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import ProductList from './components/ProductList'
 import ProductForm from './components/ProductForm'
+import Hero from './components/Hero'
+import CategoryFilter from './components/CategoryFilter'
+import ContactForm from './components/ContactForm'
 import Cart from './components/Cart'
 import Mensaje from './components/Mensaje'
 import Footer from './components/Footer'
 
 const CLAVE_CARRITO = 'gamezone-carrito'
+const CLAVE_MENSAJES = 'gamezone-mensajes'
 
 function App() {
   /* ====================== ESTADOS (useState) ====================== */
@@ -32,7 +36,16 @@ function App() {
   const [vistaCarrito, setVistaCarrito] = useState(false) // catálogo <-> carrito
   const [mostrarForm, setMostrarForm] = useState(false)   // botón que cambia de texto
   const [busqueda, setBusqueda] = useState('')
-  const [generoFiltro, setGeneroFiltro] = useState('Todos')
+  const [categoriaFiltro, setCategoriaFiltro] = useState('Todos')
+
+  // Mensajes del formulario de contacto (simulan el envío al administrador)
+  const [mensajes, setMensajes] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(CLAVE_MENSAJES)) || []
+    } catch {
+      return []
+    }
+  })
 
   /* ====================== EFECTOS (useEffect) ====================== */
 
@@ -68,6 +81,11 @@ function App() {
     localStorage.setItem(CLAVE_CARRITO, JSON.stringify(carrito))
   }, [carrito])
 
+  // Efecto: guardar los mensajes de contacto
+  useEffect(() => {
+    localStorage.setItem(CLAVE_MENSAJES, JSON.stringify(mensajes))
+  }, [mensajes])
+
   /* ====================== VALORES DERIVADOS ====================== */
   // Se calculan a partir del estado (no necesitan estado propio)
   const totalItems = carrito.reduce((suma, item) => suma + item.cantidad, 0)
@@ -78,11 +96,14 @@ function App() {
     document.title = totalItems > 0 ? `(${totalItems}) GameZone` : 'GameZone | eCommerce de videojuegos'
   }, [totalItems])
 
-  const generos = ['Todos', ...new Set(productos.map((p) => p.genero))]
+  const categorias = ['Todos', ...new Set(productos.map((p) => p.categoria))]
+
+  // Cantidad de juegos por categoría (para el contador de cada botón del filtro)
+  const conteo = productos.reduce((acc, p) => ({ ...acc, [p.categoria]: (acc[p.categoria] || 0) + 1 }), { Todos: productos.length })
 
   const productosFiltrados = productos.filter(
     (p) =>
-      (generoFiltro === 'Todos' || p.genero === generoFiltro) &&
+      (categoriaFiltro === 'Todos' || p.categoria === categoriaFiltro) &&
       p.nombre.toLowerCase().includes(busqueda.toLowerCase().trim()),
   )
 
@@ -119,18 +140,35 @@ function App() {
     quitarDelCarrito(id)
   }
 
+  // Navegación entre secciones: si se está viendo el carrito, vuelve al catálogo
+  // y luego hace scroll suave hasta la sección pedida (manipulación del DOM)
+  const navegar = (id) => {
+    setVistaCarrito(false)
+    setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 0)
+  }
+
+  // Recibe un mensaje de contacto ya validado por ContactForm
+  const enviarContacto = (datos) => {
+    setMensajes((actual) => [...actual, { ...datos, fecha: new Date().toISOString() }])
+  }
+
   /* ====================== RENDER ====================== */
   return (
     <>
-      <Navbar
-        totalItems={totalItems}
-        total={total}
-        vistaCarrito={vistaCarrito}
-        onToggleCarrito={() => setVistaCarrito((v) => !v)}
-      />
+      <header className="sticky-top">
+        <Navbar
+          totalItems={totalItems}
+          total={total}
+          vistaCarrito={vistaCarrito}
+          onToggleCarrito={() => setVistaCarrito((v) => !v)}
+          onNavegar={navegar}
+        />
+      </header>
 
       <main className="container py-4">
-        {/* Renderizado condicional principal: carrito o catálogo */}
+        {/* Renderizado condicional principal: carrito o página de inicio */}
         {vistaCarrito ? (
           <Cart
             carrito={carrito}
@@ -142,48 +180,66 @@ function App() {
           />
         ) : (
           <>
-            <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-              <h1 className="h3 mb-0">Catálogo de videojuegos</h1>
+            <Hero
+              totalJuegos={productos.length}
+              totalCategorias={categorias.length - 1}
+              onVerCatalogo={() => navegar('catalogo')}
+            />
 
-              {/* El texto del botón cambia según el estado mostrarForm */}
-              <button className="btn btn-outline-primary" onClick={() => setMostrarForm(!mostrarForm)}>
-                {mostrarForm ? '✖ Cerrar formulario' : '➕ Agregar videojuego'}
-              </button>
-            </div>
+            <section id="catalogo" aria-labelledby="titulo-catalogo" className="mb-5">
+              <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h2 id="titulo-catalogo" className="h3 mb-0">Catálogo de videojuegos</h2>
 
-            {mostrarForm && <ProductForm onAdd={agregarProducto} />}
+                {/* El texto del botón cambia según el estado mostrarForm */}
+                <button className="btn btn-outline-primary" onClick={() => setMostrarForm(!mostrarForm)}>
+                  {mostrarForm ? '✖ Cerrar formulario' : '➕ Agregar videojuego'}
+                </button>
+              </div>
 
-            {/* Estados de carga / error / datos */}
-            {cargando && <Mensaje tipo="cargando" texto="Cargando catálogo..." />}
-            {error && <Mensaje tipo="error" texto={error} />}
+              {mostrarForm && <ProductForm onAdd={agregarProducto} />}
 
-            {!cargando && !error && (
-              <>
-                <div className="row g-2 mb-4">
-                  <div className="col-md-8">
+              {/* Estados de carga / error / datos */}
+              {cargando && <Mensaje tipo="cargando" texto="Cargando catálogo..." />}
+              {error && <Mensaje tipo="error" texto={error} />}
+
+              {!cargando && !error && (
+                <>
+                  <div className="filtros mb-4">
                     <input
                       type="search"
                       className="form-control"
                       placeholder="🔍 Buscar videojuego..."
+                      aria-label="Buscar videojuego por nombre"
                       value={busqueda}
                       onChange={(e) => setBusqueda(e.target.value)}
                     />
+                    <CategoryFilter
+                      categorias={categorias}
+                      activa={categoriaFiltro}
+                      conteo={conteo}
+                      onSeleccionar={setCategoriaFiltro}
+                    />
                   </div>
-                  <div className="col-md-4">
-                    <select className="form-select" value={generoFiltro} onChange={(e) => setGeneroFiltro(e.target.value)}>
-                      {generos.map((g) => <option key={g}>{g}</option>)}
-                    </select>
-                  </div>
-                </div>
 
-                <ProductList
-                  productos={productosFiltrados}
-                  carrito={carrito}
-                  onAgregar={agregarAlCarrito}
-                  onEliminarProducto={eliminarProducto}
-                />
-              </>
-            )}
+                  <ProductList
+                    productos={productosFiltrados}
+                    carrito={carrito}
+                    onAgregar={agregarAlCarrito}
+                    onEliminarProducto={eliminarProducto}
+                  />
+                </>
+              )}
+            </section>
+
+            <section id="contacto" aria-labelledby="titulo-contacto" className="mb-4">
+              <div className="row justify-content-center">
+                <div className="col-lg-8 col-xl-6">
+                  <h2 id="titulo-contacto" className="h3 mb-1">Contacto</h2>
+                  <p className="text-muted">¿Dudas o sugerencias? Escríbele al administrador de la tienda.</p>
+                  <ContactForm onEnviar={enviarContacto} />
+                </div>
+              </div>
+            </section>
           </>
         )}
       </main>
