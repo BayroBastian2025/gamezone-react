@@ -3,13 +3,13 @@ import { formatearPrecio, resolverImagen, IMAGEN_POR_DEFECTO } from '../utils/he
 /**
  * Tarjeta individual de un videojuego.
  * Props:
- *  - producto: objeto { id, nombre, genero, precio, descripcion, imagen }
+ *  - producto: objeto { id, nombre, categoria, precio, descripcion, imagen }
  *  - enCarrito: boolean, indica si el producto ya está en el carrito
  *  - onAgregar / onEliminarProducto: funciones recibidas desde App
  */
 function ProductCard({ producto, enCarrito, onAgregar, onEliminarProducto }) {
   return (
-    <div className="card h-100 shadow-sm product-card">
+    <article className="card h-100 shadow-sm product-card">
       <img
         src={resolverImagen(producto.imagen)}
         className="card-img-top"
@@ -22,7 +22,7 @@ function ProductCard({ producto, enCarrito, onAgregar, onEliminarProducto }) {
       />
 
       <div className="card-body d-flex flex-column">
-        <span className="badge text-bg-secondary align-self-start mb-2">{producto.genero}</span>
+        <span className="badge text-bg-secondary align-self-start mb-2">{producto.categoria}</span>
         <h5 className="card-title">{producto.nombre}</h5>
         {producto.descripcion && <p className="card-text text-muted small">{producto.descripcion}</p>}
         <p className="fs-5 fw-bold text-primary mt-auto mb-3">{formatearPrecio(producto.precio)}</p>
@@ -50,7 +50,7 @@ function ProductCard({ producto, enCarrito, onAgregar, onEliminarProducto }) {
           </button>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 

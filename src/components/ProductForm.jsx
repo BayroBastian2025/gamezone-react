@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const GENEROS = ['Acción', 'Aventura', 'RPG', 'Estrategia', 'Deportes', 'Carreras', 'Simulación', 'Puzzle']
+const CATEGORIAS = ['Acción', 'Aventura', 'RPG', 'Estrategia', 'Deportes', 'Carreras', 'Simulación', 'Puzzle']
 
 /**
  * Formulario para agregar un nuevo videojuego al catálogo.
@@ -11,7 +11,8 @@ const GENEROS = ['Acción', 'Aventura', 'RPG', 'Estrategia', 'Deportes', 'Carrer
 function ProductForm({ onAdd }) {
   // Un estado por campo del formulario
   const [nombre, setNombre] = useState('')
-  const [genero, setGenero] = useState(GENEROS[0])
+  const [categoria, setCategoria] = useState(CATEGORIAS[0])
+  const [descripcion, setDescripcion] = useState('')
   const [precio, setPrecio] = useState('')
   const [imagen, setImagen] = useState('')
   const [error, setError] = useState('')
@@ -21,7 +22,11 @@ function ProductForm({ onAdd }) {
 
     // Validaciones básicas
     if (!nombre.trim() || !precio) {
-      setError('El título y el precio son obligatorios.')
+      setError('El título, la descripción y el precio son obligatorios.')
+      return
+    }
+    if (!descripcion.trim()) {
+      setError('La descripción es obligatoria.')
       return
     }
     if (Number(precio) <= 0) {
@@ -32,9 +37,9 @@ function ProductForm({ onAdd }) {
     onAdd({
       id: Date.now(), // id único simple
       nombre: nombre.trim(),
-      genero,
+      categoria,
       precio: Number(precio),
-      descripcion: 'Producto agregado manualmente.',
+      descripcion: descripcion.trim(),
       imagen: imagen.trim(), // si queda vacía se usa la imagen por defecto
     })
 
@@ -42,7 +47,8 @@ function ProductForm({ onAdd }) {
     setNombre('')
     setPrecio('')
     setImagen('')
-    setGenero(GENEROS[0])
+    setCategoria(CATEGORIAS[0])
+    setDescripcion('')
     setError('')
   }
 
@@ -60,15 +66,20 @@ function ProductForm({ onAdd }) {
             onChange={(e) => setNombre(e.target.value)} placeholder="Ej: Super Mario World" />
         </div>
         <div className="col-md-3">
-          <label className="form-label" htmlFor="genero">Género</label>
-          <select id="genero" className="form-select" value={genero} onChange={(e) => setGenero(e.target.value)}>
-            {GENEROS.map((g) => <option key={g}>{g}</option>)}
+          <label className="form-label" htmlFor="categoria">Categoría</label>
+          <select id="categoria" className="form-select" value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+            {CATEGORIAS.map((g) => <option key={g}>{g}</option>)}
           </select>
         </div>
         <div className="col-md-3">
           <label className="form-label" htmlFor="precio">Precio (CLP) *</label>
           <input id="precio" type="number" min="1" className="form-control" value={precio}
             onChange={(e) => setPrecio(e.target.value)} placeholder="19990" />
+        </div>
+        <div className="col-12">
+          <label className="form-label" htmlFor="descripcion">Descripción *</label>
+          <textarea id="descripcion" rows="2" className="form-control" value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)} placeholder="Breve descripción del videojuego" />
         </div>
         <div className="col-12">
           <label className="form-label" htmlFor="imagen">URL de la imagen (opcional)</label>
